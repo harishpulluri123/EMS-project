@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,10 @@ import com.example.dto.UserLoginRequest;
 import com.example.dto.UserLoginResponse;
 import com.example.dto.UserResponseDto;
 import com.example.entity.User;
+import com.example.exceptions.DataNotFound;
+import com.example.exceptions.MissingInputException;
+import com.example.exceptions.UserNotFoundException;
+import com.example.exceptions.UserSaveFailedException;
 import com.example.security.JwtUtils;
 import com.example.service.OtpService;
 import com.example.service.UserService;
@@ -54,9 +60,7 @@ public class UserResource {
         CommonApiResponse response = new CommonApiResponse();
 
         if (request == null) {
-            response.setMessage("Missing input");
-            response.setStatus(false);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+          throw new MissingInputException("input missing");
         }
 
         
@@ -77,9 +81,7 @@ public class UserResource {
 
         User savedata = service.savedata(userEntity);
         if (savedata == null) {
-            response.setMessage("Failed to save data");
-            response.setStatus(false);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            throw new UserSaveFailedException("Failed to register");
         }
 
         response.setMessage("Successfully registered");
@@ -91,9 +93,7 @@ public class UserResource {
         UserLoginResponse response = new UserLoginResponse();
 
         if (loginRequest == null) {
-            response.setMessage("Missing input");
-            response.setStatus(false);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+           throw new MissingInputException("Missing input");
         }
 
         String jwtToken;
@@ -139,9 +139,7 @@ public class UserResource {
         CommonApiResponse response = new CommonApiResponse();
 
         if (otpRequest == null || otpRequest.getEmail() == null) {
-            response.setMessage("Missing email");
-            response.setStatus(false);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            throw new MissingInputException("missing input");
         }
 User getbyemail = service.getbyemail(otpRequest.getEmail());
 if(getbyemail!=null) {
@@ -167,9 +165,7 @@ return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 
         List<User> findAll = service.findall();
         if (findAll.isEmpty()) {
-            api.setMessage("No data found");
-            api.setStatus(false);
-            return new ResponseEntity<>(api, HttpStatus.NOT_FOUND);
+          throw new DataNotFound("No data found");
         }
 
         api.setUser(findAll);
@@ -183,9 +179,7 @@ return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     public ResponseEntity<CommonApiResponse> grantRole(String email) {
         CommonApiResponse response = new CommonApiResponse();
         if(email==null) {
-			response.setMessage("missing input");
-			response.setStatus(false);
-			return new ResponseEntity<CommonApiResponse>(response,HttpStatus.BAD_REQUEST);
+			throw new MissingInputException("input missing");
 		}
         
         String role="HR";
@@ -215,9 +209,7 @@ return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         CommonApiResponse response = new CommonApiResponse();
         
         if(email==null) {
-			response.setMessage("missing input");
-			response.setStatus(false);
-			return new ResponseEntity<CommonApiResponse>(response,HttpStatus.BAD_REQUEST);
+			throw new MissingInputException("input missing");
 		}
         
         
@@ -251,9 +243,7 @@ return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         
 
         if (request == null) {
-            response.setMessage("Missing input");
-            response.setStatus(false);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        	throw new MissingInputException("input missing");
         }
 
         
@@ -279,9 +269,7 @@ return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 
         User savedata = service.savedata(userEntity);
         if (savedata == null) {
-            response.setMessage("Failed to save data");
-            response.setStatus(false);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+           throw new UserSaveFailedException("Failed to save data");
         }
 
         response.setMessage("Successfully registered");
@@ -301,16 +289,12 @@ return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     	
     	
     	if(email==null) {
-			dto.setMessage("missing input");
-			dto.setStatus(false);
-			return new ResponseEntity<UserResponseDto>(dto,HttpStatus.BAD_REQUEST);
+    		throw new MissingInputException("input missing");
 		}
     	
     	User getbyemail = service.getbyemail(email);
     	if(getbyemail==null) {
-    		dto.setMessage("user not found");
-    		dto.setStatus(false);
-    		return new ResponseEntity<UserResponseDto>(dto,HttpStatus.NOT_FOUND);
+    		throw new UserNotFoundException("user not found");
     	}
     	
     	dto.setSingleuser(getbyemail);
@@ -331,9 +315,7 @@ return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     	  User getbyemail = service.getbyemail(email);
     	  
     	  if(getbyemail==null) {
-    		  response.setMessage("data not found");
-              response.setStatus(false);
-              return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    		  throw new UserNotFoundException("user not found");
     	  }
     	  
     	  getbyemail.setFirstname(firstname);
@@ -361,17 +343,13 @@ return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	  
 	  
 	  if(role==null) {
-			response.setMessage("missing input");
-			response.setStatus(false);
-			return new ResponseEntity<UserResponseDto>(response,HttpStatus.BAD_REQUEST);
+			throw new MissingInputException("input missing");
 		}
 	  
 	  List<User> byRole = service.findByRole(role);
 	  
 	  if(byRole.isEmpty()) {
-		  response.setMessage("Failed to find data");
-          response.setStatus(false);
-          return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		  throw new DataNotFound("data not found");
 	  }
 	  response.setUser(byRole);
 	  response.setMessage("data found");
@@ -385,16 +363,12 @@ return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	   
 	   
 	   if(email==null) {
-			response.setMessage("missing input");
-			response.setStatus(false);
-			return new ResponseEntity<CommonApiResponse>(response,HttpStatus.BAD_REQUEST);
+			throw new MissingInputException("input missing");
 		}
 	   User getbyemail = service.getbyemail(email);
  	  
  	  if(getbyemail==null) {
- 		  response.setMessage("data not found");
-           response.setStatus(false);
-           return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+ 		throw new DataNotFound("no data found");
  	  }
  	 getbyemail.setStatus("Deactivate");
  	 
@@ -437,9 +411,7 @@ return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		  
 		  
 		  if(dto==null) {
-				response.setMessage("missing input");
-				response.setStatus(false);
-				return new ResponseEntity<CommonApiResponse>(response,HttpStatus.BAD_REQUEST);
+				throw new MissingInputException("input missing");
 			}
 		 
 		  User byEmailAndRole = service.findByEmailAndRole(dto.getEmail(), dto.getRole());
@@ -485,15 +457,11 @@ return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
   public ResponseEntity<CommonApiResponse>updatAdminPasswordAndEmail(AdminPasswordAndEmailUpdate dto){
 	  CommonApiResponse response = new CommonApiResponse();
 	  if(dto==null) {
-		  response.setMessage("missing input");
-		  response.setStatus(false);
-		  return new ResponseEntity<CommonApiResponse>(response,HttpStatus.BAD_REQUEST);
+		  throw new MissingInputException("input missing");
 	  }
 	  User getbyemail = service.getbyemail(dto.getOldEmail());
 	  if(getbyemail==null) {
-		  response.setMessage("no data found");
-		  response.setStatus(false);
-		  return new ResponseEntity<CommonApiResponse>(response,HttpStatus.BAD_REQUEST);
+		  throw new DataNotFound("no data found");
 
 	  }
 	  getbyemail.setEmail(dto.getNewemail());
@@ -508,15 +476,14 @@ return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	  response.setStatus(true);
 	  return new ResponseEntity<CommonApiResponse>(response,HttpStatus.OK);
   }
-  
   public ResponseEntity<ResponseDto> findBirthdays() {
       ResponseDto responseDto = new ResponseDto();
-      
+
       LocalDate today = LocalDate.now();
       LocalDate futureDate = today.plusDays(20);
-      
+
       List<User> usersWithUpcomingBirthdays = service.findUsersWithBirthdaysBetween(today, futureDate);
-      
+
       if (usersWithUpcomingBirthdays.isEmpty()) {
           responseDto.setMessage("No upcoming birthdays found");
           responseDto.setStatus(false);
@@ -528,25 +495,56 @@ return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
       responseDto.setListusers(usersWithUpcomingBirthdays);
       return new ResponseEntity<>(responseDto, HttpStatus.OK);
   }
-public ResponseEntity<ResponseDto> findNewJoiners() {
-      ResponseDto responseDto = new ResponseDto();
+  public ResponseEntity<ResponseDto> findNewJoiners() {
+	    ResponseDto responseDto = new ResponseDto();
 
-      LocalDate today = LocalDate.now();
-      LocalDate futureDate = today.plusDays(7);
+	    LocalDate presentDate = LocalDate.now();
+	    LocalDate pastDate = presentDate.minusDays(10); // 10 days before present date
 
-      List<User> newJoiners = service.findUsersWithJoiningDatesBetween(today, futureDate);
+	    List<User> newJoiners = service.findUsersWithJoiningDatesBetween(pastDate, presentDate);
 
-      if (newJoiners.isEmpty()||newJoiners==null) {
-          responseDto.setMessage("No new joiners found");
-          responseDto.setStatus(false);
-          return new ResponseEntity<>(responseDto, HttpStatus.NOT_FOUND);
-      }
+	    if (newJoiners.isEmpty()) {
+	        responseDto.setMessage("No new joiners found within the last 10 days.");
+	        responseDto.setStatus(false);
+	        return new ResponseEntity<>(responseDto, HttpStatus.NOT_FOUND);
+	    }
 
-      responseDto.setMessage("New joiners found");
-      responseDto.setStatus(true);
-      responseDto.setListusers(newJoiners);
-      return new ResponseEntity<>(responseDto, HttpStatus.OK);
-  }
+	    responseDto.setMessage("New joiners found within the last 10 days.");
+	    responseDto.setStatus(true);
+	    responseDto.setListusers(newJoiners);
+	    return new ResponseEntity<>(responseDto, HttpStatus.OK);
+	}
 
  
+  public ResponseEntity<UserResponseDto> getCurrentUser() {
+	    UserResponseDto response = new UserResponseDto();
+
+	    // Get the authentication object from the security context
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+	    if (authentication == null || !authentication.isAuthenticated()) {
+	        response.setMessage("User is not authenticated");
+	        response.setStatus(false);
+	        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+	    }
+
+	    // Get the email of the authenticated user
+	    String userEmail = authentication.getName();
+
+	    // Fetch the user details using the email
+	    User user = service.getbyemail(userEmail);
+
+	    if (user == null) {
+	        response.setMessage("User not found");
+	        response.setStatus(false);
+	        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+	    }
+
+	    response.setSingleuser(user);
+	    response.setMessage("User details found");
+	    response.setStatus(true);
+	    return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+  
+  
 }

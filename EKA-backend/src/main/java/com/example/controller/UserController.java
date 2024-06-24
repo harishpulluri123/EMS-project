@@ -47,6 +47,15 @@ public class UserController {
         return resource.sendOtp(otpRequest);
     }
     
+    
+    @GetMapping("/currentuser")
+    public ResponseEntity<UserResponseDto> getCurrentUser() {
+        return resource.getCurrentUser();
+    }
+    
+    
+    
+    
     //find user by email
     
     @GetMapping(value = "/findbyemail")

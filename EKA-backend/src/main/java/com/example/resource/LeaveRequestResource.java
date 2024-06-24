@@ -14,6 +14,8 @@ import com.example.dto.UserResponseDto;
 import com.example.entity.LeaveBalance;
 import com.example.entity.LeaveRequest;
 import com.example.entity.User;
+import com.example.exceptions.MissingInputException;
+import com.example.exceptions.UserNotFoundException;
 import com.example.service.EmailService;
 import com.example.service.LeaveBalanceService;
 import com.example.service.LeaveRequestService;
@@ -38,9 +40,7 @@ public class LeaveRequestResource {
 	        CommonApiResponse response = new CommonApiResponse();
 
 	        if(leaveRequests==null||leaveRequests.isEmpty()) {
-				response.setMessage("missing input");
-				response.setStatus(false);
-				return new ResponseEntity<CommonApiResponse>(response,HttpStatus.BAD_REQUEST);
+				throw new MissingInputException("input missing");
 			}
 	        
 	        
@@ -48,9 +48,8 @@ public class LeaveRequestResource {
 	            User user = userService.findByEmpNumber(leaveRequestDto.getEmpnumber());
 
 	            if (user == null) {
-	                response.setMessage("Employee not found for empnumber: " + leaveRequestDto.getEmpnumber());
-	                response.setStatus(false);
-	                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+	            	throw new UserNotFoundException("Employee not found for empnumber: " + leaveRequestDto.getEmpnumber());
+	               
 	            }
 
 	            LeaveRequest leaveRequest = ApplyLeaveRequestDto.toLeaveRequestEntity(leaveRequestDto, user);

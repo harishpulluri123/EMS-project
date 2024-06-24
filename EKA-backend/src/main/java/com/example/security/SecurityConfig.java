@@ -40,7 +40,7 @@ public class SecurityConfig {
             .cors(cors -> cors.disable())
             .authorizeHttpRequests(auth -> auth
             	
-                .requestMatchers("/api/user/login", "api/user/send-otp").permitAll()
+                .requestMatchers("/api/user/login", "api/user/send-otp","/api/user/getbirthdays","/api/user/getnewjoiners","/backendtest").permitAll()
                 // Admin Access apis
                 .requestMatchers("/api/user/grant-role", "/api/user/register","/api/user/revoke-role","/api/user/team","/api/user/adminUpdateDetails","/api/user/findbyrole","/leaveRequests/approveLeave","/leaveRequests/rejectLeave"
                 		,"/api/user/otpvalidation","/api/user/updatePassword","/complaints/allcomplaints","/location/ip","/location/location")
@@ -50,15 +50,15 @@ public class SecurityConfig {
                 		"/bankdetails/addbankdetails","/bankdetails/findallbankdetails","/educationaldetails/getallEducationalDetails" )
                 .hasAuthority("HR")
                 .requestMatchers("/leaveBalance/availableLeaves","/leaveRequests/applyLeave","/api/user/updatemployee","/leaveRequests/findEmpleaves","/educationaldetails/saveeducationaldetails")
-                .hasAuthority("Employee")
+                .hasAnyAuthority("Employee","HR")
                 // Common access for all authenticated users
                 .requestMatchers("/api/user/findbye/mail","/api/user/allusers","/announcments/addannouncement","/announcments/findallannouncements",
-                		"/attendance/all","/attendance/id/{id}","/educationaldetails/saveeducationaldetails","/api/user/getbirthdays","/api/user/getnewjoiners","/workfromhome/findbyempnumber").hasAnyAuthority("Admin", "HR", "Employee")
+                		"/attendance/all","/attendance/id/{id}","/educationaldetails/saveeducationaldetails","/workfromhome/findbyempnumber","/api/user/findbyemail","/api/user/currentuser").hasAnyAuthority("Admin", "HR", "Employee")
                 
-                .requestMatchers("/attendance/clockin","/attendance/clockout","/complaints/addcomplaint","/complaints/findbyempnumber","/documents/uploadMultiple","/documents/download","/documents//emp/{empnumber}","/documents/uploadImage/{empnumber}",
-                		"/documents/updateDocuments/{empnumber}","/payroll/generate-payslips","/payroll/generate-payslip/{employeeId}","/payroll/payslip/{payslipId}","/workfromhome/request").hasAnyAuthority("HR","Employee")
+                .requestMatchers("/attendance/clockin","/attendance/clockout","/complaints/addcomplaint","/complaints/findbyempnumber","/documents/uploadMultiple","/documents/emp/{empnumber}","/documents/uploadImage/{empnumber}",
+                		"/documents/updateDocuments/{empnumber}","/workfromhome/request").hasAnyAuthority("HR","Employee")
                 
-                .requestMatchers("/bankdetails/addbankdetails","/bankdetails/findallbankdetails","/educationaldetails/getallEducationalDetails","/workfromhome/approve","/workfromhome/reject","/workfromhome/allpendingRequests").hasAnyAuthority("HR","Admin")
+                .requestMatchers("/bankdetails/addbankdetails","/bankdetails/findallbankdetails","/educationaldetails/getallEducationalDetails","/workfromhome/approve","/workfromhome/reject","/workfromhome/allpendingRequests","documents/download","/payroll/generate-payslips","/payroll/generate-payslip/{employeeId}","/payroll/payslip/{payslipId}").hasAnyAuthority("HR","Admin")
                 
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

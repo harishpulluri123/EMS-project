@@ -1,6 +1,7 @@
 package com.example.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,8 +86,21 @@ UserDao repo;
     public User findbyempNumber(long empnumber) {
 		return repo.findByEmpNumber(empnumber);
 	}
-	public List<User> findUsersWithBirthdaysBetween(LocalDate startDate, LocalDate endDate) {
-        return repo.findUsersWithBirthdaysBetween(startDate, endDate);
+    public List<User> findUsersWithBirthdaysBetween(LocalDate startDate, LocalDate endDate) {
+        List<User> usersWithUpcomingBirthdays;
+
+        int startMonth = startDate.getMonthValue();
+        int startDay = startDate.getDayOfMonth();
+        int endMonth = endDate.getMonthValue();
+        int endDay = endDate.getDayOfMonth();
+
+        if (startMonth == endMonth) {
+            usersWithUpcomingBirthdays = repo.findUsersWithBirthdaysInMonthAndDayRange(startMonth, startDay, endDay);
+        } else {
+            usersWithUpcomingBirthdays = repo.findUsersWithBirthdaysInMonthAndDayRangeAcrossMonths(startMonth, startDay, endMonth, endDay);
+        }
+
+        return usersWithUpcomingBirthdays;
     }
 	
 	 public List<User> findUsersWithJoiningDatesBetween(LocalDate startDate, LocalDate endDate) {

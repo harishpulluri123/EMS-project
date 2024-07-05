@@ -27,7 +27,7 @@ public class LocationController {
 	    public ModelAndView getIpAddress(RedirectAttributes redirectAttributes) {
 	        String ipAddress = NetworkUtils.getLocalIpAddress();
 	        redirectAttributes.addAttribute("ip", ipAddress);
-	        return new ModelAndView(new RedirectView("/location"));
+	        return new ModelAndView(new RedirectView("/location/location"));
 	    }
 
 	    @GetMapping("/testing-location-service")

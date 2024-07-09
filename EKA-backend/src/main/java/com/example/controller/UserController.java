@@ -33,6 +33,7 @@ public class UserController {
     //hr registeration api
     @PostMapping("/register")
     public ResponseEntity<CommonApiResponse> registerUser(@RequestBody RequestUserDto request) {
+    	
         return this.resource.registerUser(request);
     }
 

@@ -263,7 +263,7 @@ return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     	
         userEntity.setRole("Employee");
         userEntity.setStatus("Active");
-        userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
+         userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
         
    
 

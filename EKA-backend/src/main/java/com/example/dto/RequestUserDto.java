@@ -40,6 +40,7 @@ public class RequestUserDto {
 	public static User toUserEntity(RequestUserDto registerUserRequestDto) {
 		User user = new User();
 		BeanUtils.copyProperties(registerUserRequestDto, user);
+		
 		return user;
 	}
 }

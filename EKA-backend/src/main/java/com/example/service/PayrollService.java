@@ -68,8 +68,7 @@ public class PayrollService {
     private void generatePayslipForEmployee(Payslip employee) {
         User payslip = new User();
         payslip.setDate(LocalDate.now());
-        payslip.setBasicSalary(employee.getBasicSalary());
-        payslip.setEmployee(employee);
+         payslip.setEmployee(employee);
         payslipRepository.save(payslip);
 
         try {

@@ -34,7 +34,9 @@ public class User {
     private String department;
     private String location;
     private String noticeperiod;
-
+    
+    private LocalDate date;
+ 
     @JsonIgnore
     private String password;
     private String role;
@@ -48,9 +50,7 @@ public class User {
     @OneToOne
     @JoinColumn(name = "bank_id")
     private BankDetails bank;
-    
-    private LocalDate date;
-    private Double BasicSalary;
+   
 
     @ManyToOne
     @JoinColumn(name = "employee_id")

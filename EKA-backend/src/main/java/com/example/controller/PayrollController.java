@@ -103,14 +103,13 @@ public class PayrollController {
         return ResponseEntity.ok(updatedPayslip);
     }
 
-    @DeleteMapping("/delete{id}")
-    public ResponseEntity<Void> deletePayslip(@PathVariable Long id) {
-        Optional<Payslip> payslipOptional = payrollService.getPayslipById(id);
-        if (!payslipOptional.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        payrollService.deletePayslip(id);
-        return ResponseEntity.noContent().build();
-    }
+	/*
+	 * @DeleteMapping("/delete{id}") public ResponseEntity<Void>
+	 * deletePayslip(@PathVariable Long id) { Optional<Payslip> payslipOptional =
+	 * payrollService.getPayslipById(id); if (!payslipOptional.isPresent()) { return
+	 * ResponseEntity.notFound().build(); }
+	 * 
+	 * payrollService.deletePayslip(id); return ResponseEntity.noContent().build();
+	 * }
+	 */
 }

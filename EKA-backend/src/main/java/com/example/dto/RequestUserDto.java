@@ -1,5 +1,7 @@
 package com.example.dto;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.BeanUtils;
 
 import com.example.entity.User;
@@ -13,18 +15,20 @@ public class RequestUserDto {
 	private String middlename;
 	private String lastname;
 	private String gender;
-	private String dateofbirth;
+	 private LocalDate dob;
 	
 	private String email;
 	private Long mobileno;
 	private String workertype;
 	private String timetype;
-	private String joiningdate;
+	private LocalDate dateofjoining;
 	private String jobtitle;
 	private String reportingmanager;
 	private String department;
 	private String location;
 	private String noticeperiod;
+	 private LocalDate date;
+	  private Double BasicSalary;
 	
 	
 	private String password;

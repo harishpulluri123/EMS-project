@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -60,14 +61,14 @@ public class PayrollService {
         return true;
     }
 
-    public Payslip getPayslipById(Long payslipId) {
-        return payslipRepository.findById(payslipId).orElse(null);
-    }
+	
+	   
+	 
 
     private void generatePayslipForEmployee(Payslip employee) {
         User payslip = new User();
         payslip.setDate(LocalDate.now());
-        payslip.setAmount(employee.getBasicSalary());
+        payslip.setBasicSalary(employee.getBasicSalary());
         payslip.setEmployee(employee);
         payslipRepository.save(payslip);
 
@@ -267,5 +268,23 @@ public class PayrollService {
         helper.addAttachment("Payslip.pdf", new ByteArrayDataSource(pdfBytes, "application/pdf"));
 
         mailSender.send(message);
+    }
+    
+    
+    
+    public Payslip savePayslip(Payslip payslip) {
+        return payslipRepository.save(payslip);
+    }
+
+    public List<Payslip> getAllPayslips() {
+        return payslipRepository.findAll();
+    }
+
+    public Optional<Payslip> getPayslipById(Long id) {
+        return payslipRepository.findById(id);
+    }
+
+    public void deletePayslip(Long id) {
+        payslipRepository.deleteById(id);
     }
 }

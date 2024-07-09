@@ -50,7 +50,7 @@ public class User {
     private BankDetails bank;
     
     private LocalDate date;
-    private Double amount;
+    private Double BasicSalary;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")

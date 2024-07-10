@@ -11,6 +11,6 @@ import java.util.List;
 public interface LeaveRequestDao extends JpaRepository<LeaveRequest, Integer> {
 List<LeaveRequest> findByStatus(String status);
 
- LeaveRequest findByEmpnumberAndStatus(Long empnumber, String status);
+ LeaveRequest  findByEmpnumberAndStatusAndLeaveType(Long empnumber, String status, String leaveType);
 List<LeaveRequest> findByEmpnumber(Long empnumber);
 }

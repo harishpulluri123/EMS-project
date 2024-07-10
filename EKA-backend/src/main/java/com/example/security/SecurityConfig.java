@@ -40,25 +40,25 @@ public class SecurityConfig {
             .cors(cors -> cors.disable())
             .authorizeHttpRequests(auth -> auth
             	
-                .requestMatchers("/api/user/login", "api/user/send-otp","/api/user/getbirthdays","/api/user/getnewjoiners","/backendtest").permitAll()
+                .requestMatchers("/api/user/login", "api/user/send-otp","/backendtest").permitAll()
                 // Admin Access apis
-                .requestMatchers("/api/user/grant-role", "/api/user/register","/api/user/revoke-role","/api/user/team","/api/user/adminUpdateDetails","/api/user/findbyrole","/leaveRequests/approveLeave","/leaveRequests/rejectLeave"
-                		,"/api/user/otpvalidation","/api/user/updatePassword","/complaints/allcomplaints","/location/ip","/location/location")
+                .requestMatchers("/api/user/grant-role", "/api/user/register","/api/user/revoke-role","/api/user/team","/api/user/adminUpdateDetails"
+                		,"/api/user/otpvalidation","/api/user/updatePassword","/complaints/allcomplaints","/location/location")
                 .hasAnyAuthority("Admin","Special")
                 //HR access apis
-                .requestMatchers("/leaveBalance/addleaves","/api/user/registeremp","/api/user/saveeducationaldetails","/leaveRequests/approveLeave","/leaveRequests/rejectLeave","/api/user/team","/api/user/deleteemployee","/api/user/findbyrole","/leaveRequests/findpendingleaves",
-                		"/bankdetails/addbankdetails","/bankdetails/findallbankdetails","/educationaldetails/getallEducationalDetails" )
+                .requestMatchers("/leaveBalance/addleaves","/api/user/registeremp","/api/user/saveeducationaldetails","/api/user/team","/api/user/deleteemployee","/api/user/findbyrole"
+                		)
                 .hasAuthority("HR")
-                .requestMatchers("/leaveBalance/availableLeaves","/leaveRequests/applyLeave","/api/user/updatemployee","/leaveRequests/findEmpleaves","/educationaldetails/saveeducationaldetails")
+                .requestMatchers("/leaveBalance/availableLeaves","/leaveRequests/applyLeave","/api/user/updatemployee","/leaveRequests/findEmpleaves","/educationaldetails/saveeducationaldetails","/attendance/clockin","/attendance/clockout","/complaints/addcomplaint","/complaints/findbyempnumber","/documents/uploadMultiple","/documents/emp/{empnumber}","/documents/uploadImage/{empnumber}",
+                		"/documents/updateDocuments/{empnumber}","/workfromhome/request")
                 .hasAnyAuthority("Employee","HR")
                 // Common access for all authenticated users
                 .requestMatchers("/api/user/findbye/mail","/api/user/allusers","/announcments/addannouncement","/announcments/findallannouncements",
-                		"/attendance/all","/attendance/id/{id}","/educationaldetails/saveeducationaldetails","/workfromhome/findbyempnumber","/api/user/findbyemail","/api/user/currentuser").hasAnyAuthority("Admin", "HR", "Employee","Special")
+                		"/attendance/all","/attendance/id/{id}","/workfromhome/findbyempnumber","/api/user/findbyemail","/api/user/currentuser","/api/user/getbirthdays","/api/user/getnewjoiners","/location/ip").hasAnyAuthority("Admin", "HR", "Employee","Special")
                 
-                .requestMatchers("/attendance/clockin","/attendance/clockout","/complaints/addcomplaint","/complaints/findbyempnumber","/documents/uploadMultiple","/documents/emp/{empnumber}","/documents/uploadImage/{empnumber}",
-                		"/documents/updateDocuments/{empnumber}","/workfromhome/request").hasAnyAuthority("HR","Employee")
+               
                 
-                .requestMatchers("/bankdetails/addbankdetails","/bankdetails/findallbankdetails","/educationaldetails/getallEducationalDetails","/workfromhome/approve","/workfromhome/reject","/workfromhome/allpendingRequests","documents/download","/payroll/generate-payslips","/payroll/generate-payslip/{employeeId}","/payroll/payslip/{payslipId}","/payroll/**").hasAnyAuthority("HR","Admin","Special")
+                .requestMatchers("/bankdetails/addbankdetails","/bankdetails/findallbankdetails","/educationaldetails/getallEducationalDetails","/workfromhome/approve","/workfromhome/reject","/workfromhome/allpendingRequests","documents/download","/payroll/generate-payslips","/payroll/generate-payslip/{employeeId}","/payroll/payslip/{payslipId}","/payroll/**","/leaveRequests/approveLeave","/leaveRequests/rejectLeave","/leaveRequests/findpendingleaves").hasAnyAuthority("HR","Admin","Special")
                 
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

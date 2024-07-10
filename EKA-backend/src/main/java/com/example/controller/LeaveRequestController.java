@@ -34,14 +34,14 @@ public class LeaveRequestController {
 	}
 	
 	@PutMapping(value = "/approveLeave")
-	public ResponseEntity<CommonApiResponse>approveleave(@RequestParam ("empnumber") Long empnumber){
-		return resource.approveLeave(empnumber);
+	public ResponseEntity<CommonApiResponse>approveleave(@RequestParam ("empnumber") Long empnumber,@RequestParam("leavetype")String leavetype){
+		return resource.approveLeave(empnumber,leavetype);
 	}
 	
 	//leave reject api
 	@PutMapping(value = "/rejectLeave")
-	public ResponseEntity<CommonApiResponse>rejectleave(@RequestParam ("empnumber") Long empnumber){
-		return resource.rejectLeave(empnumber);
+	public ResponseEntity<CommonApiResponse>rejectleave(@RequestParam ("empnumber") Long empnumber,@RequestParam("leavetype")String leavetype){
+		return resource.rejectLeave(empnumber,leavetype);
 	}
 	//find pending leaves api
 	@GetMapping(value = "/findpendingleaves")

@@ -92,12 +92,12 @@ public class LeaveRequestResource {
 	        return (int) ChronoUnit.DAYS.between(leaveRequest.getStartDate(), leaveRequest.getEndDate()) + 1;
 	    }
 ///leave approve api
-	public ResponseEntity<CommonApiResponse> approveLeave(Long empnumber) {
+	public ResponseEntity<CommonApiResponse> approveLeave(Long empnumber,String leavvetype) {
 	  CommonApiResponse response = new CommonApiResponse();
 	  
 	  String status="Pending";
 	  
-	  LeaveRequest leaveRequest =leaveRequestService.findByEmpnumberAndStatus(empnumber, status); 
+	  LeaveRequest leaveRequest =leaveRequestService.findByEmpnumberAndStatus(empnumber, status,leavvetype); 
 	  if (leaveRequest !=null) {
 		  leaveRequestService.approveLeave(leaveRequest);
 	  emailService.sendEmailApproved(leaveRequest.getEmployeeEmail(),
@@ -113,12 +113,12 @@ public class LeaveRequestResource {
 
 	//leave reject api
 	
-	public ResponseEntity<CommonApiResponse> rejectLeave(Long empnumber) {
+	public ResponseEntity<CommonApiResponse> rejectLeave(Long empnumber,String leavetype) {
         CommonApiResponse response = new CommonApiResponse();
 
         String status = "Pending";
 
-        LeaveRequest leaveRequest = leaveRequestService.findByEmpnumberAndStatus(empnumber, status);
+        LeaveRequest leaveRequest = leaveRequestService.findByEmpnumberAndStatus(empnumber, status,leavetype);
         if (leaveRequest != null) {
             // Calculate the number of requested leave days
             int requestedLeaveDays = calculateLeaveDays(leaveRequest);

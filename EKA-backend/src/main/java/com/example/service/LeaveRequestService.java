@@ -19,8 +19,8 @@ public class LeaveRequestService {
         return savedLeaveRequest != null;
     }
 
-   public LeaveRequest findByEmpnumberAndStatus(Long empnumber, String status){
-	   return leaveRequestDao.findByEmpnumberAndStatus(empnumber,status);
+   public LeaveRequest findByEmpnumberAndStatus(Long empnumber, String status,String leavetype){
+	   return leaveRequestDao.findByEmpnumberAndStatusAndLeaveType(empnumber,status,leavetype);
    }
 
     public void approveLeave(LeaveRequest leaveRequest) {
